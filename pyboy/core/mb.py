@@ -44,7 +44,7 @@ class Motherboard:
         self.sound_enabled = sound_enabled
         if sound_enabled:
             self.sound = sound.Sound()
-        self.bootrom_enabled = True
+        self.bootrom_enabled = False # True
         self.serialbuffer = ""
         self.cycles_remaining = 0
 
@@ -68,15 +68,15 @@ class Motherboard:
         f.write(STATE_VERSION)
         f.write(self.bootrom_enabled)
         self.cpu.save_state(f)
-        self.lcd.save_state(f)
-        if self.sound_enabled:
-            self.sound.save_state(f)
-        else:
-            pass
-        self.renderer.save_state(f)
-        self.ram.save_state(f)
-        self.timer.save_state(f)
-        self.cartridge.save_state(f)
+        # self.lcd.save_state(f)
+        # if self.sound_enabled:
+        #     self.sound.save_state(f)
+        # else:
+        #     pass
+        # self.renderer.save_state(f)
+        # self.ram.save_state(f)
+        # self.timer.save_state(f)
+        # self.cartridge.save_state(f)
         f.flush()
         logger.debug("State saved.")
 
