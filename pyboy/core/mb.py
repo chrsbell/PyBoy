@@ -28,6 +28,9 @@ class Motherboard:
     ):
         if bootrom_file is not None:
             logger.info("Boot-ROM file provided")
+            self.bootrom_enabled = True
+        else:
+          self.bootrom_enabled = False
 
         if profiling:
             logger.info("Profiling enabled")
@@ -44,7 +47,6 @@ class Motherboard:
         self.sound_enabled = sound_enabled
         if sound_enabled:
             self.sound = sound.Sound()
-        self.bootrom_enabled = False # True
         self.serialbuffer = ""
         self.cycles_remaining = 0
 
