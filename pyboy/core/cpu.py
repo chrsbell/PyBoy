@@ -172,7 +172,8 @@ class CPU:
             f"State loaded: A:{self.A:02x}, F:{self.F:02x}, B:{self.B:02x}, C:{self.C:02x}, D:{self.D:02x}, E:{self.E:02x}, HL:{self.HL:02x}, SP:{self.SP:02x}, PC:{self.PC:02x}, IME:{self.interrupt_master_enable}, halted:{self.halted}, stopped:{self.stopped}"
         )
 
-    def fetch_and_execute(self, pc):
+    def fetch_and_execute(self, pc, f):
+        self.save_state(f)
         opcode = self.mb.getitem(pc)
         if opcode == 0xCB: # Extension code
             pc += 1
@@ -185,7 +186,7 @@ class CPU:
 
         return opcodes.execute_opcode(self, opcode)
 
-    def tick(self):
+    def tick(self, f):
         # "The interrupt will be acknowledged during opcode fetch
         # period of each instruction."
         did_interrupt = self.check_interrupts()
@@ -199,4 +200,4 @@ class CPU:
         elif self.halted:
             return -1
 
-        return self.fetch_and_execute(self.PC)
+        return self.fetch_and_execute(self.PC, f)

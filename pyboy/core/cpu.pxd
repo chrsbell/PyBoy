@@ -42,8 +42,8 @@ cdef class CPU:
     cdef int check_interrupts(self)
 
     @cython.locals(opcode=cython.ushort)
-    cdef char fetch_and_execute(self, uint64_t)
-    cdef int tick(self)
+    cdef char fetch_and_execute(self, uint64_t, IntIOInterface)
+    cdef int tick(self, IntIOInterface)
     cdef void save_state(self, IntIOInterface)
     cdef void load_state(self, IntIOInterface, int)
 

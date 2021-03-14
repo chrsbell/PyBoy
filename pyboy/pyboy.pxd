@@ -41,5 +41,5 @@ cdef class PyBoy:
     cdef list external_input
 
     @cython.locals(done=cython.bint, event=int, t_start=float, t_cpu=float, t_emu=float, secs=float)
-    cpdef bint tick(self)
+    cpdef bint tick(self, IntIOInterface)
     cpdef void stop(self, save=*)

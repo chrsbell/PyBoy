@@ -38,7 +38,7 @@ class Motherboard:
         self.timer = timer.Timer()
         self.interaction = interaction.Interaction()
         self.cartridge = cartridge.load_cartridge(gamerom_file)
-        self.bootrom = bootrom.BootROM(bootrom_file)
+        # self.bootrom = bootrom.BootROM(bootrom_file)
         self.ram = ram.RAM(randomize=randomize)
         self.cpu = cpu.CPU(self, profiling)
         self.lcd = lcd.LCD(randomize=randomize)
@@ -133,10 +133,10 @@ class Motherboard:
         else:
             self.setitem(STAT, self.getitem(STAT) & 0b11111011)
 
-    def calculate_cycles(self, cycles_period):
+    def calculate_cycles(self, cycles_period, f):
         self.cycles_remaining += cycles_period
         while self.cycles_remaining > 0:
-            cycles = self.cpu.tick()
+            cycles = self.cpu.tick(f)
 
             # TODO: Benchmark whether 'if' and 'try/except' is better
             if cycles == -1: # CPU has HALTED
@@ -161,7 +161,7 @@ class Motherboard:
             if self.timer.tick(cycles):
                 self.cpu.set_interruptflag(TIMER)
 
-    def tickframe(self):
+    def tickframe(self, f):
         lcdenabled = self.lcd.LCDC.lcd_enable
         if lcdenabled:
             # TODO: the 19, 41 and 49._ticks should correct for longer instructions
@@ -172,18 +172,18 @@ class Motherboard:
                 # Mode 2
                 # TODO: Move out of MB
                 self.set_STAT_mode(2)
-                self.calculate_cycles(80)
+                self.calculate_cycles(80, f)
 
                 # Mode 3
                 # TODO: Move out of MB
                 self.set_STAT_mode(3)
-                self.calculate_cycles(170)
+                self.calculate_cycles(17, f)
                 self.renderer.scanline(y, self.lcd)
 
                 # Mode 0
                 # TODO: Move out of MB
                 self.set_STAT_mode(0)
-                self.calculate_cycles(206)
+                self.calculate_cycles(20, f)
 
             self.cpu.set_interruptflag(VBLANK)
             if not self.disable_renderer:
@@ -195,7 +195,7 @@ class Motherboard:
 
                 # Mode 1
                 self.set_STAT_mode(1)
-                self.calculate_cycles(456)
+                self.calculate_cycles(45, f)
         else:
             # https://www.reddit.com/r/EmuDev/comments/6r6gf3
             # TODO: What happens if LCD gets turned on/off mid-cycle?
@@ -205,7 +205,7 @@ class Motherboard:
             self.setitem(LY, 0)
 
             for y in range(154):
-                self.calculate_cycles(456)
+                self.calculate_cycles(45, f)
         if self.sound_enabled:
             self.sound.sync()
 

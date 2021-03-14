@@ -102,7 +102,7 @@ class PyBoy:
 
         self.plugin_manager = PluginManager(self, self.mb, kwargs)
 
-    def tick(self):
+    def tick(self, f):
         """
         Progresses the emulator ahead by one frame.
 
@@ -120,7 +120,7 @@ class PyBoy:
         t_pre = time.perf_counter()
         self.frame_count += 1
         if not self.paused:
-            self.mb.tickframe()
+            self.mb.tickframe(f)
         t_tick = time.perf_counter()
         self._post_tick()
         t_post = time.perf_counter()

@@ -44,8 +44,8 @@ cdef class Motherboard:
     cdef void set_STAT_mode(self, int)
     cdef void check_LYC(self, int)
     @cython.locals(cycles=cython.int)
-    cdef void calculate_cycles(self, int)
-    cdef void tickframe(self)
+    cdef void calculate_cycles(self, int, IntIOInterface)
+    cdef void tickframe(self, IntIOInterface)
 
     cdef uint8_t getitem(self, uint16_t)
     cdef void setitem(self, uint16_t, uint8_t)
